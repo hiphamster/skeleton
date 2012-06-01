@@ -8,8 +8,6 @@
 package MyPackageName;
 $MyPackageName::VERSION = '0.01';  #see POD for history
 
-# This should probably come from git ???
-#
 # Author            : Alex Yelluas
 # Created On        : 
 # Last Modified By  : 
