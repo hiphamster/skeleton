@@ -1,0 +1,16 @@
+# name
+name = alex
+
+# gender
+gender = male
+
+phone = 6502913634
+
+/* address */
+<address>
+  street = 2410 S. Park Lane
+  city   = Santa Clara
+  state  = CA
+  zip    = 95051
+</address>
+
