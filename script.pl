@@ -28,7 +28,12 @@ use Data::Dumper;
 use Config::General;
 use Getopt::Long;
 use Log::Log4perl;
-use File::Find;
+
+use File::Find; 
+# use File::Find::Rule;
+# File::Find::Rule is better if the list of files 
+# isn't huge, it gover over the ENTIRE tree, before
+# it does anything
 
 
 # optional
@@ -40,13 +45,13 @@ use File::Find;
 # use IO::All;
 
 # use XML::Simple;                                                 
-# use Date::Manip;                                                 
+# use Date::Manip or DateTime;                                                 
 # use JSON::XS
 # use Digest::MD5::File qw/file_md5_hex/;
 
 # other
 # unbuffered output,
-# fyi - select sets default handle 
+# fyi - select sets default file descriptor
 select(STDERR); $| = 1; 
 select(STDOUT); $| = 1; 
 
@@ -63,12 +68,14 @@ sub main {
   # this will 'fall through' to the default logger,
   # and will go to the file
   my $logger_file = Log::Log4perl->get_logger ('SomeLogger');
-  # this will go to the 'someOtherLogger' since it's defined in the config
-  my $logger_screen = Log::Log4perl->get_logger ('someOtherLogger');
+  # this will go to the 'screenLogger' since it's defined in the config
+  my $logger_screen = Log::Log4perl->get_logger ('screenLogger');
 
   $logger_file->error ("root_logger: This is an info");
-
   $logger_screen->error ("screen_logger: This is an info");
+
+  # &file_find;
+
 
 }
 
@@ -79,7 +86,7 @@ sub init {
 
   #Define custom 'warn' and 'die' handlers
   #local $SIG{__WARN__} = sub {
-  #  #my $logger = Log::Log4perl->get_logger ('someOtherLogger');
+  #  #my $logger = Log::Log4perl->get_logger ('screenLogger');
   #  #$logger->warn ("OH NO! Look what happened:\n@_");
   #};
 
@@ -88,7 +95,7 @@ sub init {
   #local $SIG{__DIE__}  #= sub {
   #  ## good place to disconnect from the db
   #  ## $dbh-disconnect if $dbh;
-  #  #my $logger = Log::Log4perl->get_logger ('someOtherLogger');
+  #  #my $logger = Log::Log4perl->get_logger ('screenLogger');
   #  #$logger->fatal ("I'm Dead, Jim!\n@_");
   #};
 
@@ -116,7 +123,8 @@ EOF
 
   # list of options must be provided iether through config file or
   # command line options
-  my @required = qw/weight height/; 
+  # my @required = qw/weight height/; 
+  my @required;
   my @errors;
 
   GetOptions ( "help|h"     => \$options->{help}, 
@@ -139,6 +147,26 @@ EOF
     die "\n  Errors:\n@errors\n$usage";
   }
 
+
+}
+
+# File::Find example
+sub file_find {
+
+  my $wanted = sub {
+    # has 3 refs:
+    # $File::Find::dir -- current dir
+    # $_ -- current file name (no path)
+    # $File::Find::name -- complete path name
+
+    if (-e $File::Find::name && -f $File::Find::name) {
+      print "$File::Find::name is a file\n"; 
+    }
+
+  };
+
+  my $path = getcwd;
+  find ($wanted, $path);
 
 }
 
