@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl 
+#!/home/y/bin/perl
 
 #TODO
 # logging - done
@@ -25,6 +25,7 @@ use Sys::Hostname;
 use Cwd;
 use FindBin;
 use Data::Dumper;
+use Tie::File;
 use Config::General;
 use Getopt::Long;
 use Log::Log4perl;
@@ -75,6 +76,7 @@ sub main {
   $logger_screen->error ("screen_logger: This is an info");
 
   # &file_find;
+  &last_line;
 
 
 }
@@ -170,5 +172,17 @@ sub file_find {
 
 }
 
+# ties file to an array, 
+# allows to access 
+sub last_line {
+  my $self = shift;
 
+  tie my @array, 'Tie::File', 'config' or die $!; 
+
+  # print Dumper \@array;
+  my $last = $array[$#array];
+  untie @array;
+  print "last: $last\n";
+  return $last;
+}
 
