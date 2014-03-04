@@ -8,8 +8,8 @@ phone = 6502913634
 
 /* address */
 <address>
-  street = 2410 S. Park Lane
-  city   = Santa Clara
+  street = 999 Some St
+  city   = San Francisco
   state  = CA
-  zip    = 95051
+  zip    = 99555
 </address>
